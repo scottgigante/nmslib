@@ -30,7 +30,7 @@ install:
       conda update -q conda
       conda install -q conda-build
     }
-    python --version
+- cmd: python --version
 build_script:
 - ps: cd python_bindings
 - cmd: |
