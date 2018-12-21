@@ -8,6 +8,9 @@ environment:
     MSSdk: 1
   matrix:
   - PYTHON: 27
+  - PYTHON: 35
+  - PYTHON: 36
+  - PYTHON: 37
 install:
 - cmd: '"%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%'
 - cmd: git config core.symlinks true
