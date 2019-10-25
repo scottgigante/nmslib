@@ -120,7 +120,7 @@ install:
 script:
 - $PY --version
 
-after_success:
+after_script:
   - |
     if [ "$TRAVIS_TAG" ]; then
       mv .pypirc ~/.pypirc
