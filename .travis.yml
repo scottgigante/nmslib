@@ -115,17 +115,20 @@ script:
 - $PY --version
 
 after_success:
-  - mv .pypirc ~/.pypirc
-  - python -m pip install twine wheel setuptools
-  - cd python_bindings
-  - DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
-  - docker pull $DOCKER_IMAGE
-  - PYPI_USERNAME=scottgigante
-  - docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
-  - DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
-  - PRE_CMD=linux32
-  - docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
-  - python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing wheelhouse/*
+  - |
+  if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_TAG" ]; then
+    mv .pypirc ~/.pypirc
+    python -m pip install twine wheel setuptools
+    cd python_bindings
+    DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+    docker pull $DOCKER_IMAGE
+    PYPI_USERNAME=scottgigante
+    docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+    DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
+    PRE_CMD=linux32
+    docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+    python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing wheelhouse/*
+  fi
 
 cache:
   - apt
