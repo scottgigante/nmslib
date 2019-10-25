@@ -109,32 +109,10 @@ before_install:
   $PIP install --upgrade pip
 
 install:
-- |
-  if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    cmake similarity_search -DWITH_EXTRAS=1
-  else
-    cmake similarity_search
-  fi
-  make -j 4
-  $PY -m pip install --upgrade pip
-  $PIP install scipy six flake8 psutil
-  cd python_bindings
-  $PIP install -r requirements.txt
-  $PY setup.py build_ext
-  $PIP install -U .
-  cd ..
+- $PY --version
 
 script:
 - $PY --version
-- cd python_bindings && $PY setup.py test && cd ..
-- |
-  set -e
-  if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
-      cd similarity_search;
-      ./release/bunit
-      ./release/test_integr integr.log 
-      cd ..
-  fi
 
 deploy:
   provider: script
