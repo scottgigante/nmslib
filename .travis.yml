@@ -132,13 +132,14 @@ script:
       ./release/test_integr integr.log 
       cd ..
   fi
+- cd python_bindings
 
 deploy:
   provider: pypi
   user: scottgigante
   # https://docs.travis-ci.com/user/environment-variables/#defining-variables-in-repository-settings
   password: ${PYPI_PASSWORD}
-  distributions: sdist bdist_wheel
+  distributions: build_ext sdist bdist_wheel
   skip_existing: true
   skip_cleanup: true
   on:

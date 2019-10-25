@@ -15,7 +15,7 @@ environment:
   - PYTHON: 37
   pypipassword:
     # https://ci.appveyor.com/tools/encrypt
-    secure: GRzEKTz0q+eRwEFvm1Vdrg==
+    secure: 2MYusqeMPg8P5LZ7TrA/qw==
 install:
 - cmd: '"%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%'
 - cmd: git config core.symlinks true
@@ -46,8 +46,11 @@ build_script:
     python -m pip install -qq -r requirements.txt
     python setup.py build_ext
     python -m pip install -U .
+- ps: cd ..
 test_script:
+- ps: cd python_bindings
 - cmd: python setup.py test
+- ps: cd ..
 
 deploy_script: 
 - ps: |
@@ -60,6 +63,8 @@ deploy_script:
     # Install wheel-building support
     python -m pip install --user wheel twine
     # Build wheel and upload
+    cd python_bindings
+    python setup.py build_ext
     python setup.py sdist bdist_wheel
     twine upload -r pypi -p $env:pypipassword --skip-existing dist/*
     echo "Deployment complete"
