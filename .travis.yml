@@ -128,7 +128,7 @@ after_success:
       DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
       PRE_CMD=linux32
       docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
-      WHEEL_DIR=wheelhouse
+      WHEEL_DIR="wheelhouse"
     else
       python setup.py build_ext
       python setup.py sdist bdist_wheel
