@@ -168,6 +168,7 @@ class BuildExt(build_ext):
 
 setup(
     name='nmspy',
+    packages=setuptools.find_packages(),
     version=__version__,
     description='Non-Metric Space Library (NMSLIB)',
     author='B. Naidan, L. Boytsov, Yu. Malkov, B. Frederickson, D. Novak, et al.',
