@@ -54,7 +54,7 @@ test_script:
 
 deploy_script: 
 - ps: |
-    if ($env:APPVEYOR_REPO_BRANCH -ne "master" -or $env:APPVEYOR_REPO_TAG -ne "true") { return }
+    if ($env:APPVEYOR_REPO_BRANCH -ne "master" -or $env:APPVEYOR_REPO_TAG -ne "true") { Write-Host $env:APPVEYOR_REPO_BRANCH; Write-Host $env:APPVEYOR_REPO_TAG; return }
     # Specify account details for PyPI
     echo "Deploying..."
     mv .pypirc $env:USERPROFILE\\.pypirc
