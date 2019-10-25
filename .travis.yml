@@ -159,12 +159,6 @@ deploy:
   - PRE_CMD=linux32
   - docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
   - python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing wheelhouse/*
-  user: scottgigante
-  # https://docs.travis-ci.com/user/environment-variables/#defining-variables-in-repository-settings
-  password: ${PYPI_PASSWORD}
-  distributions: build_ext sdist bdist_wheel
-  skip_existing: true
-  skip_cleanup: true
   on:
     tags: true
     branch: master
