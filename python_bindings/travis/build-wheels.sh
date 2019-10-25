@@ -5,22 +5,22 @@ set -e -x
 yum install -y atlas-devel
 
 cwd=$(pwd)
-cd /io
+cd /io/python_bindings
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" install -r /io/dev-requirements.txt
+    "${PYBIN}/pip" install -r dev-requirements.txt
     "${PYBIN}/python" setup.py build_ext
-    "${PYBIN}/pip" wheel /io/ -w ${cwd}/wheelhouse/
+    "${PYBIN}/pip" wheel . -w ${cwd}/wheelhouse/
 done
 cd $cwd
 
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
-    auditwheel repair "$whl" --plat $PLAT -w /io/wheelhouse/
+    auditwheel repair "$whl" --plat $PLAT -w /io/python_bindings/wheelhouse/
 done
 
 # Install packages and test
 for PYBIN in /opt/python/*/bin/; do
-    "${PYBIN}/pip" install nmspy --no-index -f /io/wheelhouse
+    "${PYBIN}/pip" install nmspy --no-index -f /io/python_bindings/wheelhouse
     "${PYBIN}/python" -c 'import nmspy; print(nmspy.__version__)'
 done

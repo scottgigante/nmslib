@@ -125,7 +125,6 @@ after_script:
     if [ "$TRAVIS_TAG" ]; then
       mv .pypirc ~/.pypirc
       python -m pip install twine
-      cd python_bindings
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
         docker pull $DOCKER_IMAGE
@@ -136,11 +135,14 @@ after_script:
         docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
         WHEEL_DIR="wheelhouse"
       else
+        cd python_bindings
         pip install -r dev-requirements.txt
         python setup.py build_ext
         python setup.py sdist bdist_wheel
         WHEEL_DIR="dist"
+        cd ..
       fi
+      cd python_bindings
       python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing ${WHEEL_DIR}/*
     fi
 
