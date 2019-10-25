@@ -14,8 +14,6 @@ addons:
     - libgsl0-dev
     - libeigen3-dev
 
-services:
-  - docker
 
 matrix:
   fast_finish: true
@@ -23,6 +21,8 @@ matrix:
   - os: linux
     dist: trusty
     env: PYTHON=2.7
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -35,6 +35,8 @@ matrix:
   - os: linux
     env: PYTHON=3.5
     dist: trusty
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -47,6 +49,8 @@ matrix:
   - os: linux
     env: PYTHON=3.6
     dist: xenial
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -59,6 +63,8 @@ matrix:
   - os: linux
     env: PYTHON=3.7
     dist: xenial
+    services:
+    - docker
     addons:
       apt:
         update: true
