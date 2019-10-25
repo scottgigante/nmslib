@@ -114,9 +114,7 @@ install:
 script:
 - $PY --version
 
-deploy:
-  provider: script
-  script:
+after_success:
   - mv .pypirc ~/.pypirc
   - python -m pip install twine wheel setuptools
   - cd python_bindings
@@ -128,9 +126,6 @@ deploy:
   - PRE_CMD=linux32
   - docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
   - python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing wheelhouse/*
-  on:
-    tags: true
-    branch: master
 
 cache:
   - apt
