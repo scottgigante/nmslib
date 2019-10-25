@@ -6,4 +6,6 @@ psutil
 six
 setuptools
 wheel
+twine
+pip
 
