@@ -122,7 +122,7 @@ script:
 
 after_success:
   - |
-    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_TAG" ]; then
+    if [ "$TRAVIS_TAG" ]; then
       mv .pypirc ~/.pypirc
       python -m pip install twine wheel setuptools
       cd python_bindings
@@ -141,9 +141,6 @@ after_success:
         WHEEL_DIR="dist"
       fi
       python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing ${WHEEL_DIR}/*
-    else
-      echo $TRAVIS_BRANCH
-      echo $TRAVIS_TAG
     fi
 
 cache:
