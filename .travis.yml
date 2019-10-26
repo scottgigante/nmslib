@@ -20,6 +20,8 @@ matrix:
   - os: linux
     dist: trusty
     env: PYTHON=2.7
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -32,6 +34,8 @@ matrix:
   - os: linux
     env: PYTHON=3.5
     dist: trusty
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -44,6 +48,8 @@ matrix:
   - os: linux
     env: PYTHON=3.6
     dist: xenial
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -56,6 +62,8 @@ matrix:
   - os: linux
     env: PYTHON=3.7
     dist: xenial
+    services:
+    - docker
     addons:
       apt:
         update: true
@@ -67,16 +75,28 @@ matrix:
         - python3.7-dev
   - os: osx
     env: PYTHON=27
-    osx_image: xcode9.3
+    osx_image: xcode7.3
   - os: osx
     env: PYTHON=35
-    osx_image: xcode9.3
+    osx_image: xcode7.3
   - os: osx
     env: PYTHON=36
-    osx_image: xcode9.3
+    osx_image: xcode7.3
   - os: osx
     env: PYTHON=37
-    osx_image: xcode9.3
+    osx_image: xcode7.3
+  - os: osx
+    env: PYTHON=27
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=35
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=36
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=37
+    osx_image: xcode11.2
   allow_failures:
   - os: osx
 
@@ -94,8 +114,8 @@ before_install:
     PIP=pip2
     PY=python2
     if  [ "${PYTHON:0:1}" = "3" ]; then
-      brew upgrade python
-      brew install sashkab/python/python$PYTHON
+      travis_wait 30 brew upgrade python
+      travis_wait 30 brew install sashkab/python/python$PYTHON
       PIP=pip3
       PY=python3
     fi
@@ -133,17 +153,38 @@ script:
       cd ..
   fi
 
-#deploy:
-#  provider: pypi
-#  user: searchivarius
-#  # https://docs.travis-ci.com/user/environment-variables/#defining-variables-in-repository-settings
-#  password: ${PYPI_PASSWORD}
-#  distributions: sdist bdist_wheel
-#  skip_existing: true
-#  skip_cleanup: true
-#  on:
-#    tags: true
-#    branch: master
+after_script:
+  - |
+    if [ "$TRAVIS_TAG" ]; then
+      mv .pypirc ~/.pypirc
+      python -m pip install twine
+      if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+        # manylinux build
+        for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
+          DOCKER_IMAGE=quay.io/pypa/$PLAT
+          if [ "$PLAT" == "manylinux1_i686" ]; then
+            PRE_CMD=linux32
+          else
+            PRE_CMD=""
+          fi
+          docker pull $DOCKER_IMAGE
+          docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+        done
+        WHEEL_DIR="wheelhouse"
+      else
+        # os x build
+        cd python_bindings
+        pip install -r dev-requirements.txt
+        python setup.py build_ext
+        python setup.py sdist bdist_wheel
+        WHEEL_DIR="dist"
+        cd ..
+      fi
+      cd python_bindings
+      python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing ${WHEEL_DIR}/*
+    else
+      echo "Skipping deployment because this is not a tagged commit"
+    fi
 
 cache:
   - apt
