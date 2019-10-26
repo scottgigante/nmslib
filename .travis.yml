@@ -76,24 +76,28 @@ matrix:
         - python3.7-dev
   - os: osx
     env: PYTHON=27
-    osx_image:
-    - xcode6.4
-    - xcode11.2
+    osx_image: xcode6.4
   - os: osx
     env: PYTHON=35
-    osx_image:
-    - xcode6.4
-    - xcode11.2
+    osx_image: xcode6.4
   - os: osx
     env: PYTHON=36
-    osx_image:
-    - xcode6.4
-    - xcode11.2
+    osx_image: xcode6.4
   - os: osx
     env: PYTHON=37
-    osx_image:
-    - xcode6.4
-    - xcode11.2
+    osx_image: xcode6.4
+  - os: osx
+    env: PYTHON=27
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=35
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=36
+    osx_image: xcode11.2
+  - os: osx
+    env: PYTHON=37
+    osx_image: xcode11.2
   allow_failures:
   - os: osx
 
