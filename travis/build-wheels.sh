@@ -8,6 +8,9 @@ cwd=$(pwd)
 cd /io/python_bindings
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
+    if [ $("${PYBIN}/python" --version | grep -c "Python 3.4") -eq 1 ]; then
+        continue
+    fi
     "${PYBIN}/pip" install -r dev-requirements.txt
     "${PYBIN}/python" setup.py build_ext
     "${PYBIN}/pip" wheel . -w ${cwd}/wheelhouse/
