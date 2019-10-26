@@ -28,6 +28,7 @@ for PYBIN in /opt/python/*/bin/; do
         continue
     fi
     "${PYBIN}/pip" install nmspy --no-index -f /io/python_bindings/wheelhouse
-    "${PYBIN}/python" -c 'import nmspy; print(nmspy.__version__)'
+    cd /io/python_bindings/tests/
+    "${PYBIN}/python" -m pytest
 done
 
