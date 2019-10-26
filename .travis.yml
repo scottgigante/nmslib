@@ -76,16 +76,24 @@ matrix:
         - python3.7-dev
   - os: osx
     env: PYTHON=27
-    osx_image: xcode9.3
+    osx_image:
+    - xcode6.4
+    - xcode11.2
   - os: osx
     env: PYTHON=35
-    osx_image: xcode9.3
+    osx_image:
+    - xcode6.4
+    - xcode11.2
   - os: osx
     env: PYTHON=36
-    osx_image: xcode9.3
+    osx_image:
+    - xcode6.4
+    - xcode11.2
   - os: osx
     env: PYTHON=37
-    osx_image: xcode9.3
+    osx_image:
+    - xcode6.4
+    - xcode11.2
   allow_failures:
   - os: osx
 
@@ -126,6 +134,7 @@ after_script:
       mv .pypirc ~/.pypirc
       python -m pip install twine
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+        # manylinux build
         for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
           DOCKER_IMAGE=quay.io/pypa/$PLAT
           if [ "$PLAT" == "manylinux1_i686" ]; then
@@ -134,11 +143,11 @@ after_script:
             PRE_CMD=""
           fi
           docker pull $DOCKER_IMAGE
-          PYPI_USERNAME=scottgigante
           docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
         done
         WHEEL_DIR="wheelhouse"
       else
+        # os x build
         cd python_bindings
         pip install -r dev-requirements.txt
         python setup.py build_ext
@@ -148,6 +157,8 @@ after_script:
       fi
       cd python_bindings
       python -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing ${WHEEL_DIR}/*
+    else
+      echo "Skipping deployment because this is not a tagged commit"
     fi
 
 cache:
