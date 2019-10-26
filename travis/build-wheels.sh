@@ -8,7 +8,7 @@ cwd=$(pwd)
 cd /io/python_bindings
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    if [ $("${PYBIN}/python" --version | grep -c "Python 3.4") -eq 1 ]; then
+    if [ $("${PYBIN}/python" --version | sed 's/\.//g' | grep -c "Python ${PYTHON}") -eq 0 ]; then
         continue
     fi
     "${PYBIN}/pip" install -r dev-requirements.txt
@@ -24,6 +24,10 @@ done
 
 # Install packages and test
 for PYBIN in /opt/python/*/bin/; do
+    if [ $("${PYBIN}/python" --version | sed 's/\.//g' | grep -c "Python ${PYTHON}") -eq 0 ]; then
+        continue
+    fi
     "${PYBIN}/pip" install nmspy --no-index -f /io/python_bindings/wheelhouse
     "${PYBIN}/python" -c 'import nmspy; print(nmspy.__version__)'
 done
+
