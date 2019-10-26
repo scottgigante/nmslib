@@ -126,13 +126,17 @@ after_script:
       mv .pypirc ~/.pypirc
       python -m pip install twine
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-        DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
-        docker pull $DOCKER_IMAGE
-        PYPI_USERNAME=scottgigante
-        docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
-        DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
-        PRE_CMD=linux32
-        docker run --rm -v `pwd`:/io -e $PYPI_USERNAME -e $PYPI_PASSWORD -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+        for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
+          DOCKER_IMAGE=quay.io/pypa/$PLAT
+          if [ "$PLAT" == "manylinux1_i686" ]; then
+            PRE_CMD=linux32
+          else
+            PRE_CMD=""
+          fi
+          docker pull $DOCKER_IMAGE
+          PYPI_USERNAME=scottgigante
+          docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+        done
         WHEEL_DIR="wheelhouse"
       else
         cd python_bindings
