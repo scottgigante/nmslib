@@ -166,6 +166,7 @@ after_script:
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         # manylinux build
         echo "Building manylinux wheels with auditwheel and docker"
+        git clean -fd
         for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
           DOCKER_IMAGE=quay.io/pypa/$PLAT
           if [ "$PLAT" == "manylinux1_i686" ]; then
@@ -182,7 +183,6 @@ after_script:
         echo "Building Mac OS wheels natively"
         cd python_bindings
         $PIP install --user -r dev-requirements.txt
-        $PY setup.py build_ext
         $PY setup.py sdist bdist_wheel
         WHEEL_DIR="dist"
         cd ..
