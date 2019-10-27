@@ -3,6 +3,8 @@ set -e -x
 
 # Install a system package required by our library
 yum install -y atlas-devel
+yum install -y gsl-devel
+yum install -y boost-devel
 
 cd /io/python_bindings
 mkdir -p wheelhouse_tmp/
