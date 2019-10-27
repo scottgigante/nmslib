@@ -5,7 +5,7 @@ import sys
 import setuptools
 import struct
 
-__version__ = '1.8.2'
+__version__ = '2.1'
 
 if sys.platform.startswith("win") and struct.calcsize("P") * 8 == 32:
     raise RuntimeError("Windows 32-bit is not supported.")
@@ -167,7 +167,7 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 setup(
-    name='nmslib',
+    name='nmspy',
     version=__version__,
     description='Non-Metric Space Library (NMSLIB)',
     author='B. Naidan, L. Boytsov, Yu. Malkov, B. Frederickson, D. Novak, et al.',
