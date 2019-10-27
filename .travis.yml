@@ -182,6 +182,7 @@ after_script:
       else
         # os x build
         echo "Building Mac OS wheels natively"
+        set -x
         cd python_bindings
         $PIP install --user -r dev-requirements.txt
         $PY setup.py sdist bdist_wheel
