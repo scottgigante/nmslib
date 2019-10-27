@@ -28,7 +28,7 @@ for PYBIN in /opt/python/*/bin/; do
     if [ $("${PYBIN}/python" --version 2>&1 | grep -c "Python ${PYTHON}") -eq 0 ]; then
         continue
     fi
-    "${PYBIN}/pip" install nmslib --no-index -f /io/python_bindings/wheelhouse
+    "${PYBIN}/pip" install nmspy --no-index -f /io/python_bindings/wheelhouse
     cd /io/python_bindings/tests/
     "${PYBIN}/python" -m pytest
 done
