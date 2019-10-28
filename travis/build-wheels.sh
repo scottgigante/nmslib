@@ -6,10 +6,6 @@ yum install -y atlas-devel
 # nmslib requirements
 yum install -y gsl-devel
 yum install -y boost-devel
-if [ "$PLAT" != "manylinux2010_x86_64" ]; then
-  # nmslib optional requirements
-  yum install -y libgomp-devel
-fi
 
 OUT_DIR=/io/python_bindings/wheelhouse/
 mkdir -p "${OUT_DIR}"
