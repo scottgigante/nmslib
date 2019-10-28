@@ -7,30 +7,28 @@ yum install -y gsl-devel
 yum install -y boost-devel
 yum install -y libgomp-devel
 
-cd /io/python_bindings
-mkdir -p wheelhouse_tmp/
-# Compile wheels
 for PYBIN in /opt/python/*/bin; do
+    # Select python version corresponding to this test
     if [ $("${PYBIN}/python" --version 2>&1 | grep -c "Python ${PYTHON}") -eq 0 ]; then
         continue
     fi
+
+    # Compile wheels
+    cd /io/python_bindings
     "${PYBIN}/pip" install -r dev-requirements.txt
     "${PYBIN}/python" setup.py build_ext
-    "${PYBIN}/pip" wheel . -w wheelhouse_tmp/
-done
+    mkdir -p wheelhouse_tmp/${PYBIN}
+    mkdir -p wheelhouse_repair/${PYBIN}
+    "${PYBIN}/pip" wheel . -w wheelhouse_tmp/${PYBIN}
 
-# Bundle external shared libraries into the wheels
-for whl in wheelhouse_tmp/*.whl; do
-    auditwheel repair "$whl" --plat $PLAT -w /io/python_bindings/wheelhouse/
-done
+    # Bundle external shared libraries into the wheels
+    auditwheel repair "wheelhouse_tmp/${PYBIN}/*.whl" --plat $PLAT -w wheelhouse_repair/${PYBIN}
 
-# Install packages and test
-for PYBIN in /opt/python/*/bin/; do
-    if [ $("${PYBIN}/python" --version 2>&1 | grep -c "Python ${PYTHON}") -eq 0 ]; then
-        continue
-    fi
-    "${PYBIN}/pip" install nmspy --no-index -f /io/python_bindings/wheelhouse
+    # Install and test
+    "${PYBIN}/pip" install nmspy --no-index -f wheelhouse_repair/${PYBIN}/
     cd /io/python_bindings/tests/
     "${PYBIN}/python" -m pytest
+    "${PYBIN}/pip" uninstall nmspy
+    rm -rf ../build
 done
 
