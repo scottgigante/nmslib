@@ -7,6 +7,7 @@ yum install -y gsl-devel
 yum install -y boost-devel
 yum install -y libgomp-devel
 
+mkdir -p /io/python_bindings/wheelhouse/
 for PYBIN in /opt/python/*/bin; do
     # Select python version corresponding to this test
     if [ $("${PYBIN}/python" --version 2>&1 | grep -c "Python ${PYTHON}") -eq 0 ]; then
@@ -28,7 +29,12 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" install nmslib --no-index -f wheelhouse_repair/${PYBIN}/
     cd /io/python_bindings/tests/
     "${PYBIN}/python" -m pytest
+
+    # Clean up
     "${PYBIN}/pip" uninstall nmslib
     rm -rf ../build
+    
+    # Move wheel to output directory
+    mv wheelhouse_repair/${PYBIN}/*.whl /io/python_bindings/wheelhouse/
 done
 
