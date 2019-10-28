@@ -1,11 +1,15 @@
 #!/bin/bash
 set -e -x
 
-# Install a system package required by our library
+# Auditwheel requirements
 yum install -y atlas-devel
+# nmslib requirements
 yum install -y gsl-devel
 yum install -y boost-devel
-yum install -y libgomp-devel
+if [ "$PLAT" != "manylinux2010_x86_64" ]; then
+  # nmslib optional requirements
+  yum install -y libgomp-devel
+fi
 
 mkdir -p /io/python_bindings/wheelhouse/
 for PYBIN in /opt/python/*/bin; do
