@@ -23,7 +23,7 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" wheel . -w wheelhouse_tmp/${PYBIN}
 
     # Bundle external shared libraries into the wheels
-    auditwheel repair "wheelhouse_tmp/${PYBIN}/*.whl" --plat $PLAT -w wheelhouse_repair/${PYBIN}
+    auditwheel repair $(ls wheelhouse_tmp/${PYBIN}/*.whl) --plat $PLAT -w wheelhouse_repair/${PYBIN}
 
     # Install and test
     "${PYBIN}/pip" install nmslib --no-index -f wheelhouse_repair/${PYBIN}/
