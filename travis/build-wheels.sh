@@ -11,26 +11,31 @@ if [ "$PLAT" != "manylinux2010_x86_64" ]; then
   yum install -y libgomp-devel
 fi
 
-mkdir -p /io/python_bindings/wheelhouse/
+OUT_DIR=/io/python_bindings/wheelhouse/
+mkdir -p "${OUT_DIR}"
 for PYBIN in /opt/python/*/bin; do
     # Select python version corresponding to this test
     if [ $("${PYBIN}/python" --version 2>&1 | grep -c "Python ${PYTHON}") -eq 0 ]; then
         continue
     fi
 
+    # Setup
+    TMP_DIR="wheelhouse_tmp/${PLAT}/${PYBIN}"
+    REPAIR_DIR="wheelhouse_repair/${PLAT}/${PYBIN}"
+    mkdir -p $TMP_DIR
+    mkdir -p $REPAIR_DIR
+
     # Compile wheels
     cd /io/python_bindings
     "${PYBIN}/pip" install -r dev-requirements.txt
     "${PYBIN}/python" setup.py build_ext
-    mkdir -p wheelhouse_tmp/${PYBIN}
-    mkdir -p wheelhouse_repair/${PYBIN}
-    "${PYBIN}/pip" wheel . -w wheelhouse_tmp/${PYBIN}
+    "${PYBIN}/pip" wheel . -w "${TMP_DIR}"
 
     # Bundle external shared libraries into the wheels
-    auditwheel repair $(ls wheelhouse_tmp/${PYBIN}/*.whl) --plat $PLAT -w wheelhouse_repair/${PYBIN}
+    auditwheel repair $(ls "${TMP_DIR}/*.whl") --plat "$PLAT" -w "${REPAIR_DIR}"
 
     # Install and test
-    "${PYBIN}/pip" install nmslib --no-index -f wheelhouse_repair/${PYBIN}/
+    "${PYBIN}/pip" install nmslib --no-index -f "${REPAIR_DIR}"
     cd /io/python_bindings/tests/
     "${PYBIN}/python" -m pytest
 
@@ -39,6 +44,6 @@ for PYBIN in /opt/python/*/bin; do
     rm -rf ../build
     
     # Move wheel to output directory
-    mv wheelhouse_repair/${PYBIN}/*.whl /io/python_bindings/wheelhouse/
+    mv "${REPAIR_DIR}/*.whl" "${OUT_DIR}"
 done
 
