@@ -33,7 +33,7 @@ for PYBIN in /opt/python/*/bin; do
 
     # Bundle external shared libraries into the wheels
     ls -lrt $TMP_DIR
-    for whl in $(ls -1 $TMP_DIR); do
+    for whl in $(ls -1 -d $TMP_DIR); do
       auditwheel repair --plat "$PLAT" -w "${REPAIR_DIR}" $whl 
     done
 
