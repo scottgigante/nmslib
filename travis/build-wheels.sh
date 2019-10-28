@@ -5,7 +5,7 @@ set -e -x
 yum install -y atlas-devel
 yum install -y gsl-devel
 yum install -y boost-devel
-yum install -y libgomp
+yum install -y libgomp-devel
 
 cd /io/python_bindings
 mkdir -p wheelhouse_tmp/
