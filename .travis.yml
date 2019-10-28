@@ -161,13 +161,13 @@ script:
 after_script:
   - |
     if [ "$TRAVIS_TAG" ]; then
+      git clean -fxd
+      git clean -fXd
       mv .pypirc ~/.pypirc
       $PIP install --user twine
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         # manylinux build
         echo "Building manylinux wheels with auditwheel and docker"
-        git clean -fxd
-        git clean -fXd
         for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
           DOCKER_IMAGE=quay.io/pypa/$PLAT
           if [ "$PLAT" == "manylinux1_i686" ]; then
@@ -185,6 +185,7 @@ after_script:
         set -x
         cd python_bindings
         $PIP install --user -r dev-requirements.txt
+        $PY setup.py build_ext
         $PY setup.py sdist bdist_wheel
         WHEEL_DIR="dist"
         cd ..
