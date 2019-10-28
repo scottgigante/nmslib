@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 git clean -fxd
 git clean -fXd   
 mv .pypirc ~/.pypirc
@@ -20,16 +21,10 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     WHEEL_DIR="wheelhouse"
 else
     # os x build
-    echo "Building Mac OS wheels natively"
-    set -x
     cd python_bindings
-    echo "cd success"
     $PIP install --user -r dev-requirements.txt
-    echo "pip success"
     $PY setup.py build_ext
-    echo "build success"
     $PY setup.py sdist bdist_wheel
-    echo "wheel success"
     WHEEL_DIR="dist"
     cd ..
 fi
