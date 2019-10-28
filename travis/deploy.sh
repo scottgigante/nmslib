@@ -15,7 +15,7 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
             PRE_CMD=""
         fi
         docker pull $DOCKER_IMAGE
-        docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/tr>
+    docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
     done
     WHEEL_DIR="wheelhouse"
 else
