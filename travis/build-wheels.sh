@@ -6,10 +6,6 @@ yum install -y atlas-devel
 # nmslib requirements
 yum install -y gsl-devel
 yum install -y boost-devel
-if [ "$PLAT" != "manylinux2010_x86_64" ]; then
-  # nmslib optional requirements
-  yum install -y libgomp-devel
-fi
 
 OUT_DIR=/io/python_bindings/wheelhouse/
 mkdir -p "${OUT_DIR}"
@@ -43,7 +39,7 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/python" -m pytest bindings_test.py
 
     # Clean up
-    "${PYBIN}/pip" uninstall nmspy
+    "${PYBIN}/pip" uninstall -y nmspy
     rm -rf ../build
     
     # Move wheel to output directory

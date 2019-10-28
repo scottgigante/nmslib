@@ -8,7 +8,8 @@ $PIP install --user twine
 if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     # manylinux build
     echo "Building manylinux wheels with auditwheel and docker"
-    for PLAT in manylinux1_x86_64 manylinux1_i686 manylinux2010_x86_64; do
+    echo "Ignoring manylinux1_i686"
+    for PLAT in manylinux1_x86_64 manylinux2010_x86_64; do
         DOCKER_IMAGE=quay.io/pypa/$PLAT
         if [ "$PLAT" == "manylinux1_i686" ]; then
             PRE_CMD=linux32
