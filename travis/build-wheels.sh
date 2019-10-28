@@ -32,7 +32,10 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" wheel . -w "${TMP_DIR}"
 
     # Bundle external shared libraries into the wheels
-    auditwheel repair $(ls "${TMP_DIR}/*.whl") --plat "$PLAT" -w "${REPAIR_DIR}"
+    ls -lrt $TMP_DIR
+    for whl in $(ls -1 $TMP_DIR); do
+      auditwheel repair --plat "$PLAT" -w "${REPAIR_DIR}" $whl 
+    done
 
     # Install and test
     "${PYBIN}/pip" install nmslib --no-index -f "${REPAIR_DIR}"
