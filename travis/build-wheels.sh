@@ -39,7 +39,7 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/python" -m pytest bindings_test.py
 
     # Clean up
-    "${PYBIN}/pip" uninstall nmslib
+    "${PYBIN}/pip" uninstall -y nmslib
     rm -rf ../build
     
     # Move wheel to output directory
