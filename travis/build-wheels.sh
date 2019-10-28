@@ -40,7 +40,7 @@ for PYBIN in /opt/python/*/bin; do
     # Install and test
     "${PYBIN}/pip" install nmspy --no-index -f "${REPAIR_DIR}"
     cd /io/python_bindings/tests/
-    "${PYBIN}/python" -m pytest
+    "${PYBIN}/python" -m pytest bindings_test.py
 
     # Clean up
     "${PYBIN}/pip" uninstall nmspy
