@@ -29,8 +29,8 @@ for PYBIN in /opt/python/*/bin; do
 
     # Bundle external shared libraries into the wheels
     ls -lrt $TMP_DIR
-    for whl in $(ls -1 -d ${TMP_DIR}/*.whl); do
-      auditwheel repair --plat "$PLAT" -w "${REPAIR_DIR}" $whl 
+    for whl in $(ls -1 ${TMP_DIR}); do
+      auditwheel repair --plat "$PLAT" -w "${REPAIR_DIR}" ${TMP_DIR}/$whl 
     done
 
     # Install and test
@@ -43,8 +43,8 @@ for PYBIN in /opt/python/*/bin; do
     rm -rf ../build
     
     # Move wheel to output directory
-    for whl in $(ls -1 -d ${REPAIR_DIR}/nmslib*.whl); do
-      mv $whl "${OUT_DIR}"
+    for whl in $(ls -1 ${REPAIR_DIR} | grep nmslib); do
+      mv ${REPAIR_DIR}/$whl "${OUT_DIR}"
     done
 done
 
