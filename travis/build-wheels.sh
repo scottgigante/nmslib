@@ -37,10 +37,11 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" install nmslib --no-index -f "${REPAIR_DIR}"
     cd /io/python_bindings/tests/
     "${PYBIN}/python" -m pytest bindings_test.py
+    cd ..
 
     # Clean up
     "${PYBIN}/pip" uninstall -y nmslib
-    rm -rf ../build
+    rm -rf build
     
     # Move wheel to output directory
     for whl in $(ls -1 ${REPAIR_DIR} | grep nmslib); do
