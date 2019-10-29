@@ -43,7 +43,7 @@ for PYBIN in /opt/python/*/bin; do
     rm -rf ../build
     
     # Move wheel to output directory
-    for whl in $(ls -1 -d ${REPAIR_DIR}/nmslib*.whl); do
+    for whl in $(ls -1 -d ${REPAIR_DIR}/nmspy*.whl); do
       mv $whl "${OUT_DIR}"
     done
 done
