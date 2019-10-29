@@ -118,17 +118,20 @@ matrix:
 
 before_install:
 - |
-  PIP="python -m pip"
   PY=python
   if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
     export CXX=g++-4.9 CC=gcc-4.9;
+    if [ $(echo "$PYTHON" | grep "^3\.") ]; then
+      PY=python3
+    fi
   fi
 
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pyenv install $PYTHON
     PY=/Users/travis/.pyenv/versions/${PYTHON}/bin/python
-    PIP="$PY -m pip"
   fi
+
+  PIP="$PY -m pip"
   sudo -H $PIP install --upgrade pip
 
 install:
@@ -167,6 +170,7 @@ after_script:
       export PIP
       export PYTHON
       bash travis/deploy.sh
+      $PIP install --user "six>=1.9.0"
       $PIP install --user twine
       $PY -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing python_bindings/dist/*
     else
