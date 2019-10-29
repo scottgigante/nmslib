@@ -168,6 +168,8 @@ after_script:
       export PYPI_PASSWORD
       export PYTHON
       bash travis/deploy.sh
+      $PIP install --user twine
+      $PY -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing python_bindings/dist/*
     else
       echo "Skipping deployment because this is not a tagged commit"
     fi
