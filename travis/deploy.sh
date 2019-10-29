@@ -4,7 +4,6 @@ set -x
 git clean -fxd
 git clean -fXd   
 mv .pypirc ~/.pypirc
-$PIP install --user twine
 if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     # manylinux build
     echo "Building manylinux wheels with auditwheel and docker"
@@ -17,7 +16,7 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
             PRE_CMD=""
         fi
         docker pull $DOCKER_IMAGE
-    docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+        docker run --rm -v `pwd`:/io -e PLAT=$PLAT -e PYTHON=$PYTHON $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
     done
     WHEEL_DIR="wheelhouse"
 else
@@ -29,5 +28,4 @@ else
     WHEEL_DIR="dist"
     cd ..
 fi
-cd python_bindings
-$PY -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing ${WHEEL_DIR}/*
+

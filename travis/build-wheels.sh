@@ -7,7 +7,7 @@ yum install -y atlas-devel
 yum install -y gsl-devel
 yum install -y boost-devel
 
-OUT_DIR=/io/python_bindings/wheelhouse/
+OUT_DIR=/io/python_bindings/dist/
 mkdir -p "${OUT_DIR}"
 for PYBIN in /opt/python/*/bin; do
     # Select python version corresponding to this test
