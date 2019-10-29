@@ -170,6 +170,7 @@ after_script:
       export PIP
       export PYTHON
       bash travis/deploy.sh
+      $PIP install --user "six>=1.9.0"
       $PIP install --user twine
       $PY -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing python_bindings/dist/*
     else
