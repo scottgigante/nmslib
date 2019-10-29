@@ -3,7 +3,6 @@
 set -x
 git clean -fxd
 git clean -fXd   
-mv .pypirc ~/.pypirc
 if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     # manylinux build
     echo "Building manylinux wheels with auditwheel and docker"
