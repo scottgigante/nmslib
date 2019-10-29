@@ -165,7 +165,6 @@ after_script:
       export TRAVIS_OS_NAME
       export PY
       export PIP
-      export PYPI_PASSWORD
       export PYTHON
       bash travis/deploy.sh
       $PIP install --user twine
