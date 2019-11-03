@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 import sys
 import setuptools
@@ -169,6 +169,7 @@ class BuildExt(build_ext):
 setup(
     name='nmslib',
     version=__version__,
+    packages=find_packages(),
     description='Non-Metric Space Library (NMSLIB)',
     author='B. Naidan, L. Boytsov, Yu. Malkov, B. Frederickson, D. Novak, et al.',
     url='https://github.com/searchivarius/nmslib',
